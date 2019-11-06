@@ -1,0 +1,155 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Facial recognition app - AWS Serverless.
+
+Parameters:
+  AppS3BucketName:
+    Type: String
+    Default: 'facial-recognition-s3'
+  CollectionId:
+    Type: String
+    Default: 'face-matcher'
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  AppS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref AppS3BucketName    
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders:
+            - "*"
+          AllowedMethods:
+            - GET
+            - PUT
+            - POST
+            - DELETE
+            - HEAD
+          AllowedOrigins:
+            - "*"      
+  DDBtable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: ID
+        AttributeType: S
+      KeySchema:
+      - AttributeName: ID
+        KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+  CheckStatus:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: appFunctions/
+      Handler: checkStatus.handler
+      Runtime: nodejs10.x
+      MemorySize: 128
+      Timeout: 3 
+      Environment:
+        Variables:
+          DDBtable: !Ref DDBtable       
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DDBtable   
+      Events:
+        CheckStatusAPI:
+          Type: Api 
+          Properties:
+            Path: /checkstatus
+            Method: get
+  UploadFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: appFunctions/
+      Handler: upload.handler
+      Runtime: nodejs10.x
+      MemorySize: 128
+      Timeout: 5     
+      Environment:
+        Variables:
+          UploadBucket: !Ref AppS3BucketName            
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref AppS3BucketName      
+      Events:
+        UploadAPI:
+          Type: Api 
+          Properties:
+            Path: /upload
+            Method: get
+  EnrollFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: appFunctions/
+      Handler: enroll.handler
+      Runtime: nodejs10.x
+      MemorySize: 1024
+      Timeout: 10     
+      Environment:
+        Variables:
+          DDBtable: !Ref DDBtable
+          CollectionId: !Ref CollectionId
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DDBtable        
+        - S3CrudPolicy:
+            BucketName: !Ref AppS3BucketName      
+        - Statement:
+          - Effect: Allow
+            Resource: '*'
+            Action:
+              - rekognition:*
+      Events:
+        ObjectPutEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref AppS3Bucket
+            Events: s3:ObjectCreated:*
+            Filter: 
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: 'enroll'            
+  VerifyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: appFunctions/
+      Handler: verify.handler
+      Runtime: nodejs10.x
+      MemorySize: 1024
+      Timeout: 10     
+      Environment:
+        Variables:
+          DDBtable: !Ref DDBtable
+          CollectionId: !Ref CollectionId      
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DDBtable        
+        - S3CrudPolicy:
+            BucketName: !Ref AppS3BucketName      
+        - Statement:
+          - Effect: Allow
+            Resource: '*'
+            Action:
+              - rekognition:*
+      Events:
+        ObjectPutEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref AppS3Bucket
+            Events: s3:ObjectCreated:*
+            Filter: 
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: 'verify'             
+
+Outputs:
+  UploadApi:
+    Description: "API Gateway endpoint URL for Prod stage for Upload function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/upload/"
+

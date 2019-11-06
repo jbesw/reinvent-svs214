@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: S3 auto-transcribe
+
+Parameters:
+  InputBucketName:
+    Type: String
+    Default: 's3-auto-transcribe'
+
+Globals:
+  Function:
+    Timeout: 15
+
+Resources:
+  InputS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref InputBucketName
+  TranslatorFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: transcribeFunction/
+      Handler: app.handler
+      Runtime: nodejs10.x
+      MemorySize: 128
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref InputBucketName
+        - Statement:
+          - Effect: Allow
+            Resource: '*'
+            Action:
+              - transcribe:StartTranscriptionJob
+              - cloudwatch:GetMetricStatistics
+              - cloudwatch:ListMetrics
+      Events:
+        FileUpload:
+          Type: S3
+          Properties:
+            Bucket: !Ref InputS3Bucket
+            Events: s3:ObjectCreated:*
+            Filter: 
+              S3Key:
+                Rules:
+                  - Name: suffix
+                    Value: '.mp3'            
