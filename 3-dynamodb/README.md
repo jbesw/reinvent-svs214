@@ -1,16 +1,16 @@
-# Example 3 - DynamoDB importer
+# SVS214 - Example 3 - DynamoDB importer
 
 The DynamoDB importer will automatically convert import a JSON array from an S3 object into Amazon DynamoDB.
 
-Important: this application uses Amazon DynamoDB and there are costs associated with this service after the Free Tier usage - please see the   [Amazon DynamoDB pricing page](https://aws.amazon.com/dynamodb/pricing/) for details.
+Important: this application uses various AWS services and there are costs associated with these services after the Free Tier usage - please see the [Amazon Transcribe pricing page](https://aws.amazon.com/transcribe/pricing/) for details. You are responsible for any AWS costs incurred. No warranty is implied in this example.
 
 ```bash
 .
 ├── README.MD                   <-- This instructions file
-├── importFunction          <-- Source code for a lambda function
+├── importFunction              <-- Source code for a lambda function
 │   └── app.js                  <-- Main Lambda handler
 │   └── s3.js                   <-- S3 helper functions
-│   └── testHarness.js          <-- For testing code locally
+│   └── test.js                 <-- For testing code locally
 │   └── package.json            <-- NodeJS dependencies and scripts
 ├── template.yaml               <-- SAM template
 ```

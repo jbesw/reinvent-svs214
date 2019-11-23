@@ -16,32 +16,39 @@
 'use strict'
 
 const AWS = require('aws-sdk')
-AWS.config.region = (process.env.AWS_REGION || 'us-east-1')
-const docClient = new AWS.DynamoDB.DocumentClient()
-const ddbTable = process.env.DDBtable 
-const uuidv4 = require('uuid/v4')
+AWS.config.region = process.env.AWS_REGION 
 
+const docClient = new AWS.DynamoDB.DocumentClient()
+const uuidv4 = require('uuid/v4')
 const { getS3object, putS3object }  = require('./s3')
 
-// The standard Lambda handler
+const ddbTable = process.env.DDBtable 
+
 exports.handler = async (event) => {
-
-  console.log(JSON.stringify(event, null, 2))
+  const records = event.Records
+  console.log (JSON.stringify(event, null, 2))
   console.log('Using DDB table: ', ddbTable)
-  
-  // Get original text from object in incoming event
-  const originalText = await getS3object({
-    Bucket: event.Records[0].s3.bucket.name,
-    Key: event.Records[0].s3.object.key
-  })
 
-  const jsonData = JSON.parse(originalText.Body.toString('utf-8'))
-  await uploadJSONtoDynamoDB(jsonData)
+  try {
+    await Promise.all(
+      records.map(async (record) => {
+        console.log('Incoming record: ', record)
 
-  console.log('Finished')
+        // Get original text from object in incoming event
+        const originalText = await getS3object({
+          Bucket: event.Records[0].s3.bucket.name,
+          Key: event.Records[0].s3.object.key
+        })
 
-  return {
-    statusCode: 200
+        // Upload JSON to DynamoDB
+        const jsonData = JSON.parse(originalText.Body.toString('utf-8'))
+        const ddbResult = await uploadJSONtoDynamoDB(jsonData)
+      
+        console.log ('DDBresult: ', ddbResult)
+      })
+    )
+  } catch (err) {
+    console.error(err)
   }
 }
 
@@ -57,7 +64,7 @@ const uploadJSONtoDynamoDB = async (data) => {
 
   console.log('Batches: ', batches.length)
 
-  let batchCount = 1
+  let batchCount = 0
 
   // Save each batch
   await Promise.all(
@@ -89,8 +96,8 @@ const uploadJSONtoDynamoDB = async (data) => {
 
       // Push to DynamoDB in batches
       try {
-        console.log('Trying batch: ', batchCount)
         batchCount++
+        console.log('Trying batch: ', batchCount)
         const result = await docClient.batchWrite(params).promise()
         console.log('Success: ', result)
       } catch (err) {

@@ -14,39 +14,33 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+'use strict'
+
+process.env.AWS_REGION = "us-west-2"
+process.env.ddbTable = '<<enter your table name>>'
+
 const { handler } = require('./app')
 
+// Mock event
 const event = {
   "Records": [
-      {
-          "eventVersion": "2.1",
-          "eventSource": "aws:s3",
-          "awsRegion": "us-east-1",
-          "eventTime": "2019-11-04T21:51:25.669Z",
-          "eventName": "ObjectCreated:Put",
-          "s3": {
-              "s3SchemaVersion": "1.0",
-              "configurationId": "5e6c64f2-3785-48ff-a81a-0895a56bbd9a",
-              "bucket": {
-                  "name": "jbesw-sam-importddb",
-                  "ownerIdentity": {
-                      "principalId": "ASRUZ4ZWI5GFR"
-                  },
-                  "arn": "arn:aws:s3:::jbesw-sam-importddb"
-              },
-              "object": {
-                  "key": "locations.json",
-                  "size": 1574825,
-                  "eTag": "dc33000a831d60c154f29e7b6cb026ee",
-                  "sequencer": "005DC09D5D8CAE3C46"
-              }
-          }
+    {
+      "s3": {
+        "bucket": {
+          "name": "<<bucketname>>"
+        },
+        "object": {
+          "key": "<<object_key>>"
+        }
       }
+    }
   ]
 }
 
 const main = async () => {
+  console.log('Starting test')
   await handler(event)
+  console.log('Ending test')
 }
 
 main()

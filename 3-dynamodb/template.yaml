@@ -1,11 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: DynamoDB importer
+Description: svs214 - Example 3
 
 Parameters:
   InputBucketName:
     Type: String
-    Default: 's3-ddb-importer'
+    Default: 'svs214-ex3'
 
 Globals:
   Function:
@@ -16,6 +16,7 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref InputBucketName
+
   DDBtable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -42,12 +43,6 @@ Resources:
             TableName: !Ref DDBtable        
         - S3CrudPolicy:
             BucketName: !Ref InputBucketName
-        - Statement:
-          - Effect: Allow
-            Resource: '*'
-            Action:
-              - cloudwatch:GetMetricStatistics
-              - cloudwatch:ListMetrics
       Events:
         FileUpload:
           Type: S3
