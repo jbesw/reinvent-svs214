@@ -15,14 +15,8 @@
 
 'use strict'
 
-/**
- *
- * Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
- * @param {Object} event - API Gateway Lambda Proxy Input Format
- */
-
 const AWS = require('aws-sdk')
-AWS.config.region = (process.env.AWS_REGION || 'us-east-1')
+AWS.config.region = process.env.AWS_REGION
 const transcribeService = new AWS.TranscribeService()
 
 // Language list: [en-IE, ar-AE, te-IN, en-US, en-AB, ta-IN, en-IN, ar-SA, zh-CN, gd-GB, tr-TR, id-ID, nl-NL, es-ES, pt-PT, ru-RU, it-IT, fr-FR, de-DE, ga-IE, af-ZA, ko-KR, de-CH, hi-IN, cy-GB, ms-MY, he-IL, da-DK, en-AU, en-WL, pt-BR, fa-IR, ja-JP, es-US, en-GB, fr-CA]
@@ -36,7 +30,7 @@ exports.handler = async (event) => {
     await Promise.all(
       records.map((record) => {
         const mediaUrl = `https://s3.amazonaws.com/${record.s3.bucket.name}/${record.s3.object.key}`
-        const TranscriptionJobName = record.s3.object.key
+        const TranscriptionJobName = `${record.s3.object.key}-${Date.now()}`
     
         console.log('S3 object: ', mediaUrl)
         console.log('Job name: ', TranscriptionJobName)

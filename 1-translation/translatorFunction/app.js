@@ -1,5 +1,6 @@
 /*
   Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
   Permission is hereby granted, free of charge, to any person obtaining a copy of this
   software and associated documentation files (the "Software"), to deal in the Software
   without restriction, including without limitation the rights to use, copy, modify,
@@ -14,17 +15,6 @@
 */
 
 'use strict'
-
-/**
- *
- * Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
- * @param {Object} event - API Gateway Lambda Proxy Input Format
- *
- * Context doc: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-context.html 
- * @param {Object} context
- *
- */
-
 
 const AWS = require('aws-sdk')
 AWS.config.region = (process.env.AWS_REGION || 'us-east-1')
@@ -52,7 +42,7 @@ exports.handler = async (event) => {
         try {
           await doTranslation(event, targetLanguage)
         } catch (err) {
-          console.err('Handler error: ', err)
+          console.error('Handler error: ', err)
         }
       })
   )

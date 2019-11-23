@@ -1,40 +1,38 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  S3 auto-translator - automatically translates objects (up to 5000 characters in size) into
-  a user-specified list of languages, written into a 'translations' folder.
+Description: svs214 - Example 1.
 
 Parameters:
   TargetLanguage:
     Type: String
-    Default: 'fr'
+    Default: 'fr es it'
     Description: (Required) A list of target language codes (separated by spaces)
-  InputBucketName:
+  TranslationBucketName:
     Type: String
-    Default: 's3-auto-translator'
+    Default: 'svs214-ex1-translation'
 
 Globals:
   Function:
     Timeout: 15
 
 Resources:
-  InputS3Bucket:
+  TranslationBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref InputBucketName
+      BucketName: !Ref TranslationBucketName
   TranslatorFunction:
     Type: AWS::Serverless::Function 
     Properties:
       CodeUri: translatorFunction/
       Handler: app.handler
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       MemorySize: 128
       Environment:
         Variables:
           targetLanguage: !Ref TargetLanguage
       Policies:
         - S3CrudPolicy:
-            BucketName: !Ref InputBucketName
+            BucketName: !Ref TranslationBucketName
         - Statement:
           - Effect: Allow
             Resource: '*'
@@ -47,7 +45,7 @@ Resources:
         FileUpload:
           Type: S3
           Properties:
-            Bucket: !Ref InputS3Bucket
+            Bucket: !Ref TranslationBucket
             Events: s3:ObjectCreated:*
             Filter: 
               S3Key:

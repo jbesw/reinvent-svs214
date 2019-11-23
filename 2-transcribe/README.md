@@ -1,12 +1,18 @@
-# Example 1 - S3 Auto-Transcriber
+# SVS214 - Example 2 - S3 Auto-Transcriber
 
-The S3 Auto-Transcriber will automatically convert uploaded MP3 files into transcribed text, using Amazon Transcribe.
+This code was presented at re:Invent 2019, session ID SVS214.
 
-Important: this application uses Amazon Transcribe and there are costs associated with this service after the Free Tier usage - please see the   [Amazon Transcribe pricing page](https://aws.amazon.com/transcribe/pricing/) for details.
+The S3 Auto-Transcriber will automatically convert uploaded MP3 files into transcribed text, using Amazon Transcribe. The text will be used to run a sentiment analysis, and then store the result in DynamoDB.
+
+Important: this application uses various AWS services and there are costs associated with these services after the Free Tier usage - please see the [Amazon Transcribe pricing page](https://aws.amazon.com/transcribe/pricing/) for details. You are responsible for any AWS costs incurred. No warranty is implied in this example.
 
 ```bash
 .
 ├── README.MD                   <-- This instructions file
+├── sentimentFunction           <-- Source code for a lambda function
+│   └── app.js                  <-- Main Lambda handler
+│   └── s3.js                   <-- S3 helper functions
+│   └── package.json            <-- NodeJS dependencies and scripts
 ├── transcribeFunction          <-- Source code for a lambda function
 │   └── app.js                  <-- Main Lambda handler
 │   └── package.json            <-- NodeJS dependencies and scripts
@@ -36,7 +42,7 @@ sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --stack-n
 
 * Upload an MP3 file of a person speaking (ending in the suffix '.mp3') to the target S3 bucket.
 * After a few seconds you will see a transcription file in the same bucket (using the same object name with .json appended).
-* The job name must be unique. This is the same as the object name, so uploading the same object more than once will not trigger more than one transcription job.
+* This triggers a sentiment analysis with Amazon Comprehend and the result is stored in an Amazon DynamoDB table.
 
 ==============================================
 
