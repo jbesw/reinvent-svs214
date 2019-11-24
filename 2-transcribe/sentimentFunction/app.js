@@ -64,9 +64,9 @@ exports.handler = async (event) => {
         console.log ('DDBresult: ', ddbResult)
       })
     )
-    } catch (err) {
-      console.error(err)
-    }
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 const doSentimentAnalysis = async (Text) => {

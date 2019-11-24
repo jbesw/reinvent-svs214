@@ -15,10 +15,10 @@ Vue.component('Nav', Nav)
 // ***************************** >>>>  IMPORTANT! You must update these settings. <<<<< ********************
 
 // Change these URLs to match your deployment API Gateway URL and S3 bucket. (NOTE NO TRAILING SLASH)
-Vue.prototype.$API = 'https://q2utpqquq3.execute-api.us-east-1.amazonaws.com/Prod'
+Vue.prototype.$API = 'https://1om0pf96q8.execute-api.us-west-2.amazonaws.com/Prod'
 
 // The photos URL format is: 'https://<<bucketname>>.s3.amazonaws.com/BUCKET_NAME/enroll'
-Vue.prototype.$PHOTOS_URL = 'https://facial-recognition-s3.s3.amazonaws.com/enroll'
+Vue.prototype.$PHOTOS_URL = 'https://svs214-ex6.s3.amazonaws.com/enroll'
 
 // ***************************** >>>>  IMPORTANT! You must update these settings. <<<<< ********************
 

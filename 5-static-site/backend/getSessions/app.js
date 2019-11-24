@@ -15,33 +15,23 @@
 
 'use strict'
 
-process.env.AWS_REGION = "<<enter region>>"
-process.env.OutputBucket = "<<enter S3 bucket name>>"
-process.env.ddbTable = '<<enter your table name>>'
+const AWS = require('aws-sdk')
+AWS.config.update({ region: process.env.REGION })
+const ddb = new AWS.DynamoDB.DocumentClient()
 
-const { handler } = require('./app')
+// Take an image ID, return the matching Item from the DynamoDB table.
 
-// Mock event
-const event = {
-  "Records": [
-    {
-      "s3": {
-        "bucket": {
-          "name": "<<bucketname>>"
-        },
-        "object": {
-          "key": "<<object_key>>"
-        }
-      }
-    }
-  ]
+exports.handler = async (event) => {
+  const sessions = await ddb.scan({
+    TableName : process.env.DDBtable
+  }).promise()
+
+  return {
+    statusCode: 200,
+    isBase64Encoded: false,
+    headers: {
+      "Access-Control-Allow-Origin": "*"
+    },
+    body: JSON.stringify(sessions.Items)
+  }
 }
-
-const main = async () => {
-  console.log('Starting test')
-  await handler(event)
-  console.log('Ending test')
-}
-
-main()
-

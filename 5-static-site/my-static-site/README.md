@@ -1,8 +1,4 @@
-# Face matching app
-
-This code was presented at re:Invent 2019, session ID SVS214.
-
-By James Beswick (@jbesw), AWS Serverless.
+# my-static-site
 
 ## Project setup
 ```

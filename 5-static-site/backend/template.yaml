@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: svs214 - Example 5
+
+Resources:
+  DDBtable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: ID
+        AttributeType: S
+      KeySchema:
+      - AttributeName: ID
+        KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+ 
+  ## Lambda functions
+
+  GetSessions:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: getSessions/
+      Handler: app.handler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Timeout: 3 
+      Environment:
+        Variables:
+          DDBtable: !Ref DDBtable       
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref DDBtable   
+      Events:
+        GetSessionsAPI:
+          Type: Api 
+          Properties:
+            Path: /getSessions
+            Method: get
+
+Outputs:
+  UploadApi:
+    Description: "API Gateway endpoint URL for Prod stage for function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getSessions/"
+

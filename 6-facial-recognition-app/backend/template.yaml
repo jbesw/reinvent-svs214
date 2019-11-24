@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Facial recognition app - AWS Serverless.
+Description: Facial recognition app - AWS Serverless
 
 Parameters:
   AppS3BucketName:
@@ -9,10 +9,6 @@ Parameters:
   CollectionId:
     Type: String
     Default: 'face-matcher'
-
-Globals:
-  Function:
-    Timeout: 3
 
 Resources:
   AppS3Bucket:
@@ -41,8 +37,11 @@ Resources:
       - AttributeName: ID
         KeyType: HASH
       BillingMode: PAY_PER_REQUEST
+ 
+  ## Lambda functions
+
   CheckStatus:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function 
     Properties:
       CodeUri: appFunctions/
       Handler: checkStatus.handler
@@ -61,8 +60,9 @@ Resources:
           Properties:
             Path: /checkstatus
             Method: get
+
   UploadFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function 
     Properties:
       CodeUri: appFunctions/
       Handler: upload.handler
@@ -81,6 +81,7 @@ Resources:
           Properties:
             Path: /upload
             Method: get
+
   EnrollFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -88,7 +89,7 @@ Resources:
       Handler: enroll.handler
       Runtime: nodejs10.x
       MemorySize: 1024
-      Timeout: 10     
+      Timeout: 10
       Environment:
         Variables:
           DDBtable: !Ref DDBtable
@@ -113,7 +114,8 @@ Resources:
               S3Key:
                 Rules:
                   - Name: prefix
-                    Value: 'enroll'            
+                    Value: 'enroll'
+
   VerifyFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -121,7 +123,7 @@ Resources:
       Handler: verify.handler
       Runtime: nodejs10.x
       MemorySize: 1024
-      Timeout: 10     
+      Timeout: 10
       Environment:
         Variables:
           DDBtable: !Ref DDBtable

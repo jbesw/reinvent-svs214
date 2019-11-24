@@ -1,7 +1,7 @@
 {
-  "name": "hello_world",
+  "name": "facematcher",
   "version": "1.0.0",
-  "description": "hello world sample for NodeJS",
+  "description": "",
   "main": "app.js",
   "repository": {
     "type": "git",

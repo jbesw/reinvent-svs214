@@ -26,7 +26,7 @@ const filteredResult = result.Labels.filter(function(item){
 })
 
 if (filteredResult.length > 0) {
-  if (filteredResult[0].Name === 'Dog') consolelog 'Dog'
+  if (filteredResult[0].Name === 'Dog') console.log ('Dog')
   if (filteredResult[0].Name === 'Cat') return 'Cat'
 }
 
