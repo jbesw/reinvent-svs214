@@ -1,5 +1,5 @@
 {
-  "name": "importFunction",
+  "name": "import-function",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "AWS Serverless",
+  "license": "MIT-0",
   "dependencies": {
     "aws-sdk": "^2.563.0",
     "uuid": "^3.3.3"

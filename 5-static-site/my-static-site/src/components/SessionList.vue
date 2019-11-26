@@ -13,7 +13,7 @@
       <v-flex mb-4>
         <h2 class="headline font-weight-bold mb-3">Where's James at re:Invent?</h2>
         <p class="subheading font-weight-regular">
-          Here's a list of sessions...
+          Here's a list of events...
         </p>
       </v-flex>
 
@@ -38,7 +38,7 @@
      <v-footer dark padless absolute>
       <v-card flat tile width="100%" class="indigo lighten-1 text-center">
         <v-card-text class="white--text">
-          See this code on https://github.com/jbesw
+          Meet the AWS Serverless team at re:Invent!
         </v-card-text>
       </v-card>
     </v-footer>
@@ -49,10 +49,12 @@
 <script>
 /* eslint-disable */
 import Loading from 'vue-loading-overlay'
-// Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css'
 import axios from 'axios'
-const sessionsAPI = '<< ENTER YOUR API ENDPOINT >>'
+
+// ADD YOUR API GATEWAY ENDPOINT HERE! >>>
+const sessionsAPI = 'https://vc66gcfshj.execute-api.us-west-2.amazonaws.com/Prod/getSessions/'
+// <<<
 
 export default {
   name: 'SessionList',
@@ -62,20 +64,20 @@ export default {
   mounted: async function () {
     this.isLoading = true
     try {
-      const response = await axios.get(sessionsAPI)
+      let response = await axios.get(sessionsAPI)
+      response.data.sort((a,b) => a.ID < b.ID ? true : false)
       console.log('Sessions: ', response.data)
 
       response.data.map((item) => {
-        console.log(item)
         this.sessions.push ({
           name: `${item.SessionID} - ${item.Description}`,
           when: item.When
         })
       })
-      this.isLoading = false
     } catch (err) {
       console.error(err)
     }    
+    this.isLoading = false
   },
   data: () => ({
     isLoading: false,

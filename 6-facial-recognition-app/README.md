@@ -35,18 +35,17 @@ Important: this application uses various AWS services and there are costs associ
 1. From the command line, run:
 ```
 sam package --output-template-file packaged.yaml --s3-bucket <<enter deployment bucket name>>
-sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --stack-name example6-facematcher --region us-east-1 --parameter-overrides InputBucketName=<<enter translation bucket name>>
+sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --stack-name svs214-ex6-facematcher --region us-west-2 --parameter-overrides AppS3BucketName=svs214-ex6 CollectionId=face-matcher
 ```
 
 ## Parameter Details
 
-* InputBucketName: the unique name of a new S3 bucket for this application (bucket names must be lowercase only and globally unique across AWS)
+* AppS3BucketName: the unique name of a new S3 bucket for this application (bucket names must be lowercase only and globally unique across AWS)
+* CollectionId: the name for a Rekognition collection.
 
 ## How it works
 
-* Upload an MP3 file of a person speaking (ending in the suffix '.mp3') to the target S3 bucket.
-* After a few seconds you will see a transcription file in the same bucket (using the same object name with .json appended).
-* This triggers a sentiment analysis with Amazon Comprehend and the result is stored in an Amazon DynamoDB table.
+* 
 
 ==============================================
 
