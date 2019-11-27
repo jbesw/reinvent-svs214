@@ -13,24 +13,6 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-const AWS = require('aws-sdk')
-const stepFunctions = new AWS.StepFunctions({ region: process.env.AWS_REGION })
-
 exports.handler = async (event) => {
-    console.log(event)
-    const params = {
-        stateMachineArn: process.env.stateMachineArn,
-        name: Math.floor(Math.random() * Math.floor(1000000000)).toString(),
-        input: JSON.stringify({
-            bucket: event.Records[0].s3.bucket.name,
-            key: event.Records[0].s3.object.key
-        })
-    }    
-    console.log(params)
-    const result = await stepFunctions.startExecution(params).promise()
-    console.log(result)
-
-    return {
-        statusCode: 200
-    }
+  console.log('Meow!', event)
 }

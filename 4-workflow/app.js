@@ -13,24 +13,41 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+'use strict'
+
 const AWS = require('aws-sdk')
-const stepFunctions = new AWS.StepFunctions({ region: process.env.AWS_REGION })
+AWS.config.region = process.env.AWS_REGIONs
+const rekognition = new AWS.Rekognition({apiVersion: '2016-06-27'})
 
-exports.handler = async (event) => {
-    console.log(event)
-    const params = {
-        stateMachineArn: process.env.stateMachineArn,
-        name: Math.floor(Math.random() * Math.floor(1000000000)).toString(),
-        input: JSON.stringify({
-            bucket: event.Records[0].s3.bucket.name,
-            key: event.Records[0].s3.object.key
-        })
-    }    
-    console.log(params)
-    const result = await stepFunctions.startExecution(params).promise()
-    console.log(result)
+const handler = async function(event) {
 
-    return {
-        statusCode: 200
+  const params = {
+    Image: {
+    S3Object: {
+      Bucket: "jbesw-textract-useast1", 
+      Name: "dog1.jpg"
     }
+    }, 
+    MaxLabels: 5, 
+    MinConfidence: 70
+  }
+
+  const data = await rekognition.detectLabels(params).promise()
+
+  const filteredResult = data.Labels.filter(function(item){
+    if (item.Name === 'Dog' || item.Name === 'Cat') return item
+  })
+    
+  if (filteredResult.length > 0) {
+    if (filteredResult[0].Name === 'Dog') return 'Dog'
+    if (filteredResult[0].Name === 'Cat') return 'Cat'
+  }
+  
+  return 'Unknown'
+   
 }
+
+const main = async function () {
+  console.log(await handler(null))
+}
+main()
