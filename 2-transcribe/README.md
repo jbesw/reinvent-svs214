@@ -22,7 +22,7 @@ Important: this application uses various AWS services and there are costs associ
 ## Requirements
 
 * AWS CLI already configured with Administrator permission
-* [NodeJS 8.10+ installed](https://nodejs.org/en/download/)
+* [NodeJS 12.x installed](https://nodejs.org/en/download/)
 
 ## Installation Instructions
 
@@ -31,7 +31,7 @@ Important: this application uses various AWS services and there are costs associ
 1. From the command line, run:
 ```
 sam package --output-template-file packaged.yaml --s3-bucket <<enter deployment bucket name>>
-sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --stack-name example2-transcribe --region us-east-1 --parameter-overrides InputBucketName=<<enter translation bucket name>>
+sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --stack-name example2-transcribe --region <<enter your region>> --parameter-overrides InputBucketName=<<enter translation bucket name>>
 ```
 
 ## Parameter Details
