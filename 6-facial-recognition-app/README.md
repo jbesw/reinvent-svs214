@@ -6,7 +6,7 @@ The face matching app  lets you enroll and verify faces uploaded to an S3 bucket
 
 The backend portion of the code configures the Lambda functions that comprise the API for the frontend, and the triggers between the S3 bucket, Rekognition and DynamoDB. 
 
-Important: this application uses various AWS services and there are costs associated with these services after the Free Tier usage - please see the [Amazon Transcribe pricing page](https://aws.amazon.com/transcribe/pricing/) for details. You are responsible for any AWS costs incurred. No warranty is implied in this example.
+Important: this application uses various AWS services and there are costs associated with these services after the Free Tier usage - please see the [AWS Pricing page](https://aws.amazon.com/pricing/) for details. You are responsible for any AWS costs incurred. No warranty is implied in this example.
 
 ```bash
 .

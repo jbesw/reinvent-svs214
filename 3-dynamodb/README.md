@@ -2,7 +2,7 @@
 
 The DynamoDB importer will automatically convert import a JSON array from an S3 object into Amazon DynamoDB.
 
-Important: this application uses various AWS services and there are costs associated with these services after the Free Tier usage - please see the [Amazon Transcribe pricing page](https://aws.amazon.com/transcribe/pricing/) for details. You are responsible for any AWS costs incurred. No warranty is implied in this example.
+Important: this application uses various AWS services and there are costs associated with these services after the Free Tier usage - please see the [AWS Pricing page](https://aws.amazon.com/pricing/) for details. You are responsible for any AWS costs incurred. No warranty is implied in this example.
 
 ```bash
 .
