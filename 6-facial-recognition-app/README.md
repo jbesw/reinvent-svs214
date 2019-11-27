@@ -43,10 +43,6 @@ sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --stack-n
 * AppS3BucketName: the unique name of a new S3 bucket for this application (bucket names must be lowercase only and globally unique across AWS)
 * CollectionId: the name for a Rekognition collection.
 
-## How it works
-
-* 
-
 ==============================================
 
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
