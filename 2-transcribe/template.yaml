@@ -1,11 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: svs214 - Example 2
+Description: Auto-transcriber and sentiment analyzer
 
 Parameters:
   InputBucketName:
     Type: String
-    Default: 'svs214-ex2'
+    Default: 'myTranscribeBucket'
 
 Globals:
   Function:
@@ -61,7 +61,7 @@ Resources:
                   - Name: suffix
                     Value: '.json'              
 
-  TranslatorFunction:
+  TranscribeFunction:
     Type: AWS::Serverless::Function 
     Properties:
       CodeUri: transcribeFunction/

@@ -26,7 +26,7 @@ exports.handler = async (event) => {
 
   // Check the output bucket exists
   if (!process.env.OutputBucket)
-    return console.log('Error: process.env.TranslationBucket not defined')
+    return console.log('Error: process.env.OutputBucket not defined')
 
   // Handle each incoming S3 object in the event
   await Promise.all(

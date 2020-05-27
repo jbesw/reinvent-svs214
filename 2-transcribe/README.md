@@ -1,10 +1,11 @@
-# SVS214 - Example 2 - S3 Auto-Transcriber
+# S3 - Auto-transcriber and sentiment analyzer
 
-This code was presented at re:Invent 2019, session ID SVS214.
-
-The S3 Auto-Transcriber will automatically convert uploaded MP3 files into transcribed text, using Amazon Transcribe. The text will be used to run a sentiment analysis, and then store the result in DynamoDB.
+The S3 Auto-transcriber and sentiment analyzer will automatically convert uploaded MP3 files into transcribed text, using Amazon Transcribe. The resulting text is used to run a sentiment analysis with AWS Comprehend, and then store the result in DynamoDB.
 
 Important: this application uses various AWS services and there are costs associated with these services after the Free Tier usage - please see the [AWS Pricing page](https://aws.amazon.com/pricing/) for details. You are responsible for any AWS costs incurred. No warranty is implied in this example.
+
+This code was originally presented at re:Invent 2019, session ID SVS214.
+
 
 ```bash
 .
@@ -30,8 +31,8 @@ Important: this application uses various AWS services and there are costs associ
 
 1. From the command line, run:
 ```
-sam package --output-template-file packaged.yaml --s3-bucket <<enter deployment bucket name>>
-sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --stack-name example2-transcribe --region <<enter your region>> --parameter-overrides InputBucketName=<<enter translation bucket name>>
+sam build
+sam deploy --template-file packaged.yaml --capabilities CAPABILITY_IAM --stack-name auto-transcriber --region <<enter your region>> --parameter-overrides InputBucketName=<<enter translation bucket name>>
 ```
 
 ## Parameter Details

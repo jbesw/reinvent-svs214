@@ -18,6 +18,8 @@ const stepFunctions = new AWS.StepFunctions({ region: process.env.AWS_REGION })
 
 exports.handler = async (event) => {
     console.log(event)
+
+    // Build params object for Step Functions 
     const params = {
         stateMachineArn: process.env.stateMachineArn,
         name: Math.floor(Math.random() * Math.floor(1000000000)).toString(),
@@ -27,6 +29,7 @@ exports.handler = async (event) => {
         })
     }    
     console.log(params)
+    // Start the execution of the worflows
     const result = await stepFunctions.startExecution(params).promise()
     console.log(result)
 
